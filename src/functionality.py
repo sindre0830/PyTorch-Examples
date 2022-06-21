@@ -21,8 +21,8 @@ def convertDatasetToTensors(trainData: np.ndarray, trainLabels: np.ndarray, test
     yTestTensor = torch.tensor(testLabels)
     trainDataset = torch.utils.data.TensorDataset(xTrainTensor, yTrainTensor)
     testDataset = torch.utils.data.TensorDataset(xTestTensor, yTestTensor)
-    trainDatasetLoader = torch.utils.data.DataLoader(trainDataset)
-    testDatasetLoader = torch.utils.data.DataLoader(testDataset)
+    trainDatasetLoader = torch.utils.data.DataLoader(trainDataset, batch_size=100, shuffle=True, num_workers=1)
+    testDatasetLoader = torch.utils.data.DataLoader(testDataset, batch_size=100, shuffle=True, num_workers=1)
     return trainDatasetLoader, testDatasetLoader
 
 
