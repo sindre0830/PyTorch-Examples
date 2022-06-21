@@ -12,5 +12,5 @@ jobs:
     # steps to perform
     steps:
     - uses: actions/checkout@v2
-    - uses: igsekor/pyspelling-any@v0.0.2
-      name: Spellcheck
+    - name: Spellcheck
+      uses: igsekor/pyspelling-any@v1.0.4
