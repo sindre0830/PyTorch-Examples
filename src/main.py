@@ -5,6 +5,9 @@ from functionality import (
     normalizeData,
     convertDatasetToTensors
 )
+from model import (
+    Model
+)
 
 
 # Main program.
@@ -13,6 +16,7 @@ def main():
     trainData, trainLabels, testData, testLabels = loadDataset()
     trainData, testData = normalizeData(trainData, testData)
     trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(trainData, trainLabels, testData, testLabels)
+    model = Model()
 
 
 # branch if program is run through 'python main.py'
