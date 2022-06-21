@@ -6,11 +6,19 @@ on:
   workflow_dispatch:
 # instructions the workflow will perform
 jobs:
-  build:
+  spelling:
     # environment to run on
     runs-on: ubuntu-latest
     # steps to perform
     steps:
     - uses: actions/checkout@v2
-    - name: Spellcheck
-      uses: igsekor/pyspelling-any@v1.0.4
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools pyspelling
+        sudo apt-get install aspell aspell-en
+    - name: Spell check
+       run: python -m pyspelling
