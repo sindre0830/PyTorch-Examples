@@ -50,3 +50,19 @@ class Model(torch.nn.Module):
             torch.nn.LazyLinear(out_features=10),
             torch.nn.Softmax()
         )
+    
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer5(x)
+        x = self.layer6(x)
+        x = self.flatten(x)
+        x = self.layer7(x)
+        x = self.layer8(x)
+        x = self.layer9(x)
+        x = self.layer10(x)
+        x = self.layer11(x)
+        x = self.layer12(x)
+        x = self.layer13(x)
+        return x
