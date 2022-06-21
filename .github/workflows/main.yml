@@ -3,6 +3,8 @@ name: Main workflow
 # when to run the workflow
 on:
   push:
+  - './.github/workflows/main.yml'
+  - './src/**'
   pull_request:
 # instructions the workflow will perform
 jobs:
@@ -19,6 +21,7 @@ jobs:
         python-version: '3.9.13'
 
     - name: Install dependencies
+      working-directory: ./src
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
@@ -26,7 +29,9 @@ jobs:
         pip install flake8
 
     - name: Build program
+      working-directory: ./src
       run: python -m py_compile ./main.py
 
     - name: Syntax checker
+      working-directory: ./src
       run: flake8 . --max-line-length 150
