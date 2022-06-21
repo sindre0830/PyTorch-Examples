@@ -2,6 +2,9 @@ name: Spellchecker
 # when to run the workflow
 on:
   push:
+    paths:
+    - '.github/workflows/spellcheck.yml'
+    - 'README.md'
   pull_request:
   workflow_dispatch:
 # instructions the workflow will perform
