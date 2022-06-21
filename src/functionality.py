@@ -26,6 +26,13 @@ def convertDatasetToTensors(trainData: np.ndarray, trainLabels: np.ndarray, test
     return trainDatasetLoader, testDatasetLoader
 
 
+# Normalizes the data from 0-255 to 0-1.
+def normalizeData(trainData: np.ndarray, testData: np.ndarray):
+    trainData = trainData / 255.
+    testData = testData / 255.
+    return trainData, testData
+
+
 # Loads dataset from dataset directory
 def loadDataset():
     trainData = np.load(DATASET_PATH + 'trainData.npy')
