@@ -3,8 +3,9 @@ name: Main workflow
 # when to run the workflow
 on:
   push:
-  - '.github/workflows/main.yml'
-  - 'src/**'
+    paths:
+    - '.github/workflows/main.yml'
+    - 'src/**'
   pull_request:
 # instructions the workflow will perform
 jobs:
