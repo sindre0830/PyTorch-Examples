@@ -11,6 +11,15 @@ import idx2numpy
 import numpy as np
 
 
+# Loads dataset from dataset directory
+def loadDataset():
+    trainData = np.load(DATASET_PATH + 'trainData.npy')
+    trainLabels = np.load(DATASET_PATH + 'trainLabels.npy')
+    testData = np.load(DATASET_PATH + 'testData.npy')
+    testLabels = np.load(DATASET_PATH + 'testLabels.npy')
+    return trainData, trainLabels, testData, testLabels
+
+
 # Downloads and extracts the MNIST dataset from the internet.
 def getDataset():
     # create direcotries if they don't exists

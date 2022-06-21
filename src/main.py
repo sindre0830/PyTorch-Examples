@@ -1,12 +1,14 @@
 # internal libraries
 from functionality import (
-    getDataset
+    getDataset,
+    loadDataset
 )
 
 
 # Main program.
 def main():
     getDataset()
+    trainData, trainLabels, testData, testLabels = loadDataset()
 
 
 # branch if program is run through 'python main.py'
