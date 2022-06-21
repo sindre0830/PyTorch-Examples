@@ -21,4 +21,4 @@ jobs:
         python -m pip install --upgrade pip setuptools pyspelling
         sudo apt-get install aspell aspell-en
     - name: Spell check
-       run: python -m pyspelling
+      run: python -m pyspelling
