@@ -17,6 +17,7 @@ def main():
     trainData, testData = normalizeData(trainData, testData)
     trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(trainData, trainLabels, testData, testLabels)
     model = Model()
+    print(model)
 
 
 # branch if program is run through 'python main.py'
