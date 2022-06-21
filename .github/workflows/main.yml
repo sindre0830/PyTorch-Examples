@@ -1,0 +1,32 @@
+# source: https://github.com/sindre0830/Workflow-Templates
+name: Main workflow
+# when to run the workflow
+on:
+  push:
+  pull_request:
+# instructions the workflow will perform
+jobs:
+  build:
+    # environment to run on
+    runs-on: ubuntu-latest
+    # steps to perform
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9.13'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip freeze > requirements.txt
+        pip install flake8
+
+    - name: Build program
+      run: python -m py_compile ./main.py
+
+    - name: Syntax checker
+      run: flake8 . --max-line-length 150
