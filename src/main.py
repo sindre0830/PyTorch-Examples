@@ -1,6 +1,12 @@
+# internal libraries
+from functionality import (
+    getDataset
+)
+
+
 # Main program.
 def main():
-    print("Hello, World!")
+    getDataset()
 
 
 # branch if program is run through 'python main.py'
