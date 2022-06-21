@@ -46,7 +46,7 @@ class Model(torch.nn.Module):
             torch.nn.ReLU(inplace=True),
             torch.nn.Dropout(.25, inplace=True)
         )
-        self.layer11 = torch.nn.Sequential(
+        self.layer13 = torch.nn.Sequential(
             torch.nn.LazyLinear(out_features=10),
             torch.nn.Softmax()
         )
