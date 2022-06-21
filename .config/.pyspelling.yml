@@ -3,10 +3,14 @@ spellchecker: aspell
 matrix:
 - name: markdown
   sources:
-  - '*.md'
+  - 'README.md'
   aspell:
     lang: en
     d: en_US
+  dictionary:
+    wordlists:
+    - .config/wordlist.txt
+    output: .config/dictionary.dic
   pipeline:
   - pyspelling.filters.markdown:
   - pyspelling.filters.html:
