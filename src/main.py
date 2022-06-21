@@ -1,7 +1,8 @@
 # internal libraries
 from functionality import (
     getDataset,
-    loadDataset
+    loadDataset,
+    convertDatasetToTensors
 )
 
 
@@ -9,6 +10,7 @@ from functionality import (
 def main():
     getDataset()
     trainData, trainLabels, testData, testLabels = loadDataset()
+    trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(trainData, trainLabels, testData, testLabels)
 
 
 # branch if program is run through 'python main.py'
