@@ -3,6 +3,7 @@ from functionality import (
     getDataset
 )
 
+
 # Main program.
 def main():
     getDataset()

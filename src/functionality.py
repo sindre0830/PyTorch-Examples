@@ -10,6 +10,7 @@ import shutil
 import idx2numpy
 import numpy as np
 
+
 # Downloads and extracts the MNIST dataset from the internet.
 def getDataset():
     # create direcotries if they don't exists
