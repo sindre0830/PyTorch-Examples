@@ -1,5 +1,25 @@
 # external libraries
 import torch
+import torch.utils.data
+
+
+# Train model defined in the Model class.
+def train(model: torch.nn.Module, trainDatasetLoader: torch.utils.data.DataLoader, epochs: int):
+    model.train()
+    criterion = torch.nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
+    total_step = len(trainDatasetLoader)
+    for epoch in range(epochs):
+        for i, (images, labels) in enumerate(trainDatasetLoader):
+            b_x = torch.autograd.Variable(images)
+            b_y = torch.autograd.Variable(labels)
+            output = model(b_x)
+            loss = criterion(output, b_y)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            if (i + 1) % 100 == 100:
+                print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'.format(epoch + 1, epochs, i + 1, total_step, loss.item()))
 
 
 # Defines the machine learning model layout.

@@ -6,7 +6,8 @@ from functionality import (
     convertDatasetToTensors
 )
 from model import (
-    Model
+    Model,
+    train
 )
 
 
@@ -18,6 +19,7 @@ def main():
     trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(trainData, trainLabels, testData, testLabels, batch_size=32)
     model = Model()
     print(model)
+    train(model, trainDatasetLoader, epochs=30)
 
 
 # branch if program is run through 'python main.py'
