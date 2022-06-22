@@ -26,7 +26,6 @@ def main():
     trainData, trainLabels, testData, testLabels = loadDataset()
     trainData, testData = normalizeData(trainData, testData)
     trainDatasetLoader = convertDatasetToTensors(trainData, trainLabels)
-    testDatasetLoader = convertDatasetToTensors(testData, testLabels)
     # create model
     model = Model()
     train(model, device, trainDatasetLoader)
