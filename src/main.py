@@ -9,17 +9,19 @@ from model import (
     Model,
     train
 )
+# external libraries
+import torch
 
 
 # Main program.
 def main():
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     getDataset()
     trainData, trainLabels, testData, testLabels = loadDataset()
     trainData, testData = normalizeData(trainData, testData)
-    trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(trainData, trainLabels, testData, testLabels, batch_size=32)
+    trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(device, trainData, trainLabels, testData, testLabels, batch_size=32)
     model = Model()
-    print(model)
-    train(model, trainDatasetLoader, epochs=30)
+    train(model, device, trainDatasetLoader, epochs=30)
 
 
 # branch if program is run through 'python main.py'
