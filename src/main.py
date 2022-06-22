@@ -13,16 +13,21 @@ from model import (
 import torch
 import warnings
 
+# ignore warnings, this was added due to PyTorch LazyLayers causing warning
 warnings.filterwarnings('ignore')
+# get a device to run on
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 # Main program.
 def main():
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    # preprocess
     getDataset()
     trainData, trainLabels, testData, testLabels = loadDataset()
     trainData, testData = normalizeData(trainData, testData)
-    trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(trainData, trainLabels, testData, testLabels)
+    trainDatasetLoader = convertDatasetToTensors(trainData, trainLabels)
+    testDatasetLoader = convertDatasetToTensors(testData, testLabels)
+    # create model
     model = Model()
     train(model, device, trainDatasetLoader)
 

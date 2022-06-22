@@ -15,24 +15,23 @@ import torch.utils.data
 
 
 # Converts dataset to a PyTorch tensor dataset.
-def convertDatasetToTensors(trainData: np.ndarray, trainLabels: np.ndarray, testData: np.ndarray, testLabels: np.ndarray):
-    xTrainTensor = torch.tensor(trainData)
-    yTrainTensor = torch.tensor(trainLabels)
-    xTestTensor = torch.tensor(testData)
-    yTestTensor = torch.tensor(testLabels)
-    trainDataset = torch.utils.data.TensorDataset(xTrainTensor, yTrainTensor)
-    testDataset = torch.utils.data.TensorDataset(xTestTensor, yTestTensor)
-    trainDatasetLoader = torch.utils.data.DataLoader(trainDataset, batch_size=BATCH_SIZE, shuffle=True)
-    testDatasetLoader = torch.utils.data.DataLoader(testDataset, batch_size=BATCH_SIZE, shuffle=True)
-    return trainDatasetLoader, testDatasetLoader
+def convertDatasetToTensors(data: np.ndarray, labels: np.ndarray):
+    # reshape data by adding channels
+    data = np.expand_dims(data, axis=1).astype('float32')
+    # convert to tensors
+    data = torch.tensor(data)
+    labels = torch.tensor(labels)
+    # convert to dataset
+    dataset = torch.utils.data.TensorDataset(data, labels)
+    # convert to data loader
+    datasetLoader = torch.utils.data.DataLoader(dataset, batch_size=BATCH_SIZE)
+    return datasetLoader
 
 
 # Normalizes the data from 0-255 to 0-1.
 def normalizeData(trainData: np.ndarray, testData: np.ndarray):
     trainData = trainData / 255.
     testData = testData / 255.
-    trainData = np.expand_dims(trainData, axis=1).astype('float32')
-    testData = np.expand_dims(testData, axis=1).astype('float32')
     return trainData, testData
 
 
@@ -45,7 +44,7 @@ def loadDataset():
     return trainData, trainLabels, testData, testLabels
 
 
-# Downloads and extracts the MNIST dataset from the internet.
+# Downloads and extracts the MNIST dataset.
 def getDataset():
     # create direcotries if they don't exists
     os.makedirs(DATASET_PATH, exist_ok=True)
