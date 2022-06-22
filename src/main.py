@@ -19,7 +19,7 @@ def main():
     getDataset()
     trainData, trainLabels, testData, testLabels = loadDataset()
     trainData, testData = normalizeData(trainData, testData)
-    trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(device, trainData, trainLabels, testData, testLabels)
+    trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(trainData, trainLabels, testData, testLabels)
     model = Model()
     train(model, device, trainDatasetLoader)
 
