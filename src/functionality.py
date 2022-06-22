@@ -30,8 +30,8 @@ def convertDatasetToTensors(trainData: np.ndarray, trainLabels: np.ndarray, test
 def normalizeData(trainData: np.ndarray, testData: np.ndarray):
     trainData = trainData / 255.
     testData = testData / 255.
-    trainData = trainData.reshape(trainData.shape[0], trainData.shape[1], trainData.shape[2], 1).astype('float32')
-    testData = testData.reshape(testData.shape[0], testData.shape[1], testData.shape[2], 1).astype('float32')
+    trainData = np.expand_dims(trainData, axis=1).astype('float32')
+    testData = np.expand_dims(testData, axis=1).astype('float32')
     return trainData, testData
 
 
