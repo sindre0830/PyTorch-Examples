@@ -18,12 +18,13 @@ def train(model: torch.nn.Module, device: torch.cuda.device, trainDatasetLoader:
     model.train()
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
-    total_step = len(trainDatasetLoader)
+    N = len(trainDatasetLoader.dataset)
     for epoch in range(EPOCHS):
+        correct = 0
         progressbar = tqdm.tqdm(
             iterable=trainDatasetLoader,
             desc='Epoch {:>2}/{}'.format(epoch + 1, EPOCHS),
-            ncols=100,
+            ncols=150,
             ascii='░▒',
             unit=' step'
         )
@@ -35,8 +36,11 @@ def train(model: torch.nn.Module, device: torch.cuda.device, trainDatasetLoader:
             loss = criterion(output, labels)
             loss.backward()
             optimizer.step()
+            output = torch.argmax(output, dim=1)
+            correct += (output == labels).float().sum()
+            accuracy = 100 * correct / N
             if i % BATCH_SIZE == (BATCH_SIZE - 1):
-                progressbar.set_postfix_str("Loss: {:.4f}".format(loss.item()))
+                progressbar.set_postfix_str("Loss: {:.4f}, Accuracy: {:.4f}".format(loss.item(), accuracy))
     model.train(False)
 
 
