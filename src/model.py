@@ -3,7 +3,8 @@ from dictionary import (
     EPOCHS,
     BATCH_SIZE,
     CHANNELS,
-    LABELS_TOTAL
+    LABELS_TOTAL,
+    GPU_DEVICE
 )
 # external libraries
 import torch
@@ -12,9 +13,9 @@ import tqdm
 
 
 # Train model defined in the Model class.
-def train(model: torch.nn.Module, device: torch.cuda.device, trainDatasetLoader: torch.utils.data.DataLoader):
-    # branch if GPU is available and set model to train on it
-    if torch.cuda.is_available():
+def train(model: torch.nn.Module, device: torch.cuda.device, device_type: str, trainDatasetLoader: torch.utils.data.DataLoader):
+    # branch if the device is set to GPU and send the model to the device
+    if device_type is GPU_DEVICE:
         model.cuda(device)
     # set model to training mode
     model.train()
