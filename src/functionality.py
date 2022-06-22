@@ -15,10 +15,10 @@ import torch.utils.data
 
 # Converts dataset to a PyTorch tensor dataset.
 def convertDatasetToTensors(device: torch.cuda.device, trainData: np.ndarray, trainLabels: np.ndarray, testData: np.ndarray, testLabels: np.ndarray, batch_size: int):
-    xTrainTensor = torch.tensor(trainData).to(device)
-    yTrainTensor = torch.tensor(trainLabels).to(device)
-    xTestTensor = torch.tensor(testData).to(device)
-    yTestTensor = torch.tensor(testLabels).to(device)
+    xTrainTensor = torch.tensor(trainData)
+    yTrainTensor = torch.tensor(trainLabels)
+    xTestTensor = torch.tensor(testData)
+    yTestTensor = torch.tensor(testLabels)
     trainDataset = torch.utils.data.TensorDataset(xTrainTensor, yTrainTensor)
     testDataset = torch.utils.data.TensorDataset(xTestTensor, yTestTensor)
     trainDatasetLoader = torch.utils.data.DataLoader(trainDataset, batch_size=batch_size, shuffle=True)

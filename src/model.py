@@ -12,15 +12,15 @@ def train(model: torch.nn.Module, device: torch.cuda.device, trainDatasetLoader:
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
     total_step = len(trainDatasetLoader)
     for epoch in range(epochs):
-        for i, (images, labels) in enumerate(trainDatasetLoader):
-            b_x = torch.autograd.Variable(images)
-            b_y = torch.autograd.Variable(labels)
-            output = model(b_x)
-            loss = criterion(output, b_y)
+        for i, (data, labels) in enumerate(trainDatasetLoader):
+            data = data.to(device, non_blocking=True)
+            labels = labels.to(device, non_blocking=True)
             optimizer.zero_grad()
+            output = model(data)
+            loss = criterion(output, labels)
             loss.backward()
             optimizer.step()
-            if (i + 1) % 100 == 100:
+            if i % 32 == 31:
                 print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'.format(epoch + 1, epochs, i + 1, total_step, loss.item()))
 
 
