@@ -11,6 +11,9 @@ from model import (
 )
 # external libraries
 import torch
+import warnings
+
+warnings.filterwarnings('ignore')
 
 
 # Main program.
