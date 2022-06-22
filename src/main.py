@@ -5,14 +5,26 @@ from functionality import (
     normalizeData,
     convertDatasetToTensors
 )
+from model import (
+    Model,
+    train
+)
+# external libraries
+import torch
+import warnings
+
+warnings.filterwarnings('ignore')
 
 
 # Main program.
 def main():
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     getDataset()
     trainData, trainLabels, testData, testLabels = loadDataset()
     trainData, testData = normalizeData(trainData, testData)
     trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(trainData, trainLabels, testData, testLabels)
+    model = Model()
+    train(model, device, trainDatasetLoader)
 
 
 # branch if program is run through 'python main.py'

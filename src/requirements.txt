@@ -2,5 +2,4 @@ requests
 idx2numpy
 numpy
 torch
-torchvision
-torchaudio
+tqdm
