@@ -1,6 +1,7 @@
 # internal libraries
 from dictionary import (
-    DATASET_PATH
+    DATASET_PATH,
+    BATCH_SIZE
 )
 # external libraries
 import requests
@@ -14,15 +15,15 @@ import torch.utils.data
 
 
 # Converts dataset to a PyTorch tensor dataset.
-def convertDatasetToTensors(device: torch.cuda.device, trainData: np.ndarray, trainLabels: np.ndarray, testData: np.ndarray, testLabels: np.ndarray, batch_size: int):
+def convertDatasetToTensors(trainData: np.ndarray, trainLabels: np.ndarray, testData: np.ndarray, testLabels: np.ndarray):
     xTrainTensor = torch.tensor(trainData)
     yTrainTensor = torch.tensor(trainLabels)
     xTestTensor = torch.tensor(testData)
     yTestTensor = torch.tensor(testLabels)
     trainDataset = torch.utils.data.TensorDataset(xTrainTensor, yTrainTensor)
     testDataset = torch.utils.data.TensorDataset(xTestTensor, yTestTensor)
-    trainDatasetLoader = torch.utils.data.DataLoader(trainDataset, batch_size=batch_size, shuffle=True)
-    testDatasetLoader = torch.utils.data.DataLoader(testDataset, batch_size=batch_size, shuffle=True)
+    trainDatasetLoader = torch.utils.data.DataLoader(trainDataset, batch_size=BATCH_SIZE, shuffle=True)
+    testDatasetLoader = torch.utils.data.DataLoader(testDataset, batch_size=BATCH_SIZE, shuffle=True)
     return trainDatasetLoader, testDatasetLoader
 
 

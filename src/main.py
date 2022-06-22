@@ -19,9 +19,9 @@ def main():
     getDataset()
     trainData, trainLabels, testData, testLabels = loadDataset()
     trainData, testData = normalizeData(trainData, testData)
-    trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(device, trainData, trainLabels, testData, testLabels, batch_size=32)
+    trainDatasetLoader, testDatasetLoader = convertDatasetToTensors(device, trainData, trainLabels, testData, testLabels)
     model = Model()
-    train(model, device, trainDatasetLoader, epochs=30)
+    train(model, device, trainDatasetLoader)
 
 
 # branch if program is run through 'python main.py'

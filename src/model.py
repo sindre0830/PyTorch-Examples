@@ -1,17 +1,24 @@
+# internal libraries
+from dictionary import (
+    EPOCHS,
+    BATCH_SIZE,
+    CHANNELS,
+    LABELS_TOTAL
+)
 # external libraries
 import torch
 import torch.utils.data
 
 
 # Train model defined in the Model class.
-def train(model: torch.nn.Module, device: torch.cuda.device, trainDatasetLoader: torch.utils.data.DataLoader, epochs: int):
+def train(model: torch.nn.Module, device: torch.cuda.device, trainDatasetLoader: torch.utils.data.DataLoader):
     if torch.cuda.is_available():
         model.cuda(device)
     model.train()
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
     total_step = len(trainDatasetLoader)
-    for epoch in range(epochs):
+    for epoch in range(EPOCHS):
         for i, (data, labels) in enumerate(trainDatasetLoader):
             data = data.to(device, non_blocking=True)
             labels = labels.to(device, non_blocking=True)
@@ -20,8 +27,8 @@ def train(model: torch.nn.Module, device: torch.cuda.device, trainDatasetLoader:
             loss = criterion(output, labels)
             loss.backward()
             optimizer.step()
-            if i % 32 == 31:
-                print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'.format(epoch + 1, epochs, i + 1, total_step, loss.item()))
+            if i % BATCH_SIZE == (BATCH_SIZE - 1):
+                print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'.format(epoch + 1, EPOCHS, i + 1, total_step, loss.item()))
 
 
 # Defines the machine learning model layout.
@@ -30,7 +37,7 @@ class Model(torch.nn.Module):
     def __init__(self):
         super().__init__()
         self.input = torch.nn.Sequential(
-            torch.nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, stride=1),
+            torch.nn.Conv2d(in_channels=CHANNELS, out_channels=32, kernel_size=5, stride=1),
             torch.nn.ReLU()
         )
         self.conv2d_1 = torch.nn.LazyConv2d(out_channels=32, kernel_size=5, stride=1, bias=False)
@@ -69,7 +76,7 @@ class Model(torch.nn.Module):
             torch.nn.Dropout(.25)
         )
         self.output = torch.nn.Sequential(
-            torch.nn.LazyLinear(out_features=10),
+            torch.nn.LazyLinear(out_features=LABELS_TOTAL),
             torch.nn.Softmax(dim=1)
         )
 
