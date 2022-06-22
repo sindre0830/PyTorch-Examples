@@ -8,6 +8,7 @@ from dictionary import (
 # external libraries
 import torch
 import torch.utils.data
+import tqdm
 
 
 # Train model defined in the Model class.
@@ -19,7 +20,14 @@ def train(model: torch.nn.Module, device: torch.cuda.device, trainDatasetLoader:
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
     total_step = len(trainDatasetLoader)
     for epoch in range(EPOCHS):
-        for i, (data, labels) in enumerate(trainDatasetLoader):
+        progressbar = tqdm.tqdm(
+            iterable=trainDatasetLoader,
+            desc='Epoch {:>2}/{}'.format(epoch + 1, EPOCHS),
+            ncols=100,
+            ascii='░▒',
+            unit=' step'
+        )
+        for i, (data, labels) in enumerate(progressbar):
             data = data.to(device, non_blocking=True)
             labels = labels.to(device, non_blocking=True)
             optimizer.zero_grad()
@@ -28,7 +36,8 @@ def train(model: torch.nn.Module, device: torch.cuda.device, trainDatasetLoader:
             loss.backward()
             optimizer.step()
             if i % BATCH_SIZE == (BATCH_SIZE - 1):
-                print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'.format(epoch + 1, EPOCHS, i + 1, total_step, loss.item()))
+                progressbar.set_postfix_str("Loss: {:.4f}".format(loss.item()))
+    model.train(False)
 
 
 # Defines the machine learning model layout.
