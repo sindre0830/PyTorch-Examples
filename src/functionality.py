@@ -14,6 +14,19 @@ import numpy as np
 import torch
 import torch.utils.data
 import multiprocessing
+import tqdm
+
+
+# Generates progressbar for iterable used in model training.
+def getProgressbar(iter: torch.utils.data.DataLoader, epoch, epochs):
+    progressbar = tqdm.tqdm(
+        iterable=iter,
+        desc='Epoch {:>2}/{}'.format(epoch + 1, epochs),
+        ncols=150,
+        ascii='░▒',
+        unit=' step'
+    )
+    return progressbar
 
 
 # Converts dataset to a PyTorch tensor dataset.

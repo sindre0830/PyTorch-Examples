@@ -6,10 +6,12 @@ from dictionary import (
     LABELS_TOTAL,
     GPU_DEVICE
 )
+from functionality import (
+    getProgressbar
+)
 # external libraries
 import torch
 import torch.utils.data
-import tqdm
 
 
 # Train model defined in the Model class.
@@ -28,13 +30,7 @@ def train(model: torch.nn.Module, device: torch.cuda.device, device_type: str, t
         correct = 0.
         running_loss = 0.
         # define the progressbar
-        progressbar = tqdm.tqdm(
-            iterable=trainDatasetLoader,
-            desc='Epoch {:>2}/{}'.format(epoch + 1, EPOCHS),
-            ncols=150,
-            ascii='░▒',
-            unit=' step'
-        )
+        progressbar = getProgressbar(trainDatasetLoader, epoch, EPOCHS)
         # loop through the dataset
         for i, (data, labels) in enumerate(progressbar):
             # send data to device
