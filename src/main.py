@@ -32,9 +32,10 @@ def main():
     trainData, testData = normalizeData(trainData, testData)
     trainLoader = convertDatasetToTensors(device_type, trainData, trainLabels)
     testLoader = convertDatasetToTensors(device_type, testData, testLabels)
-    # create model
+    # generate and train model
     model = Model()
-    train(model, device, device_type, trainLoader, testLoader)
+    history = train(model, device, device_type, trainLoader, testLoader)
+    print(history['train_accuracy'])
 
 
 # branch if program is run through 'python main.py'

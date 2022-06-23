@@ -24,6 +24,11 @@ def train(model: torch.nn.Module, device: torch.cuda.device, device_type: str, t
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
     TRAIN_SIZE = len(trainLoader.dataset)
+    # init history lists
+    arrTrainLoss = []
+    arrTrainAccuracy = []
+    arrValidationLoss = []
+    arrValidationAccuracy = []
     # loop through each epoch
     for epoch in range(EPOCHS):
         correct = 0.
@@ -59,12 +64,25 @@ def train(model: torch.nn.Module, device: torch.cuda.device, device_type: str, t
                 trainLoss = totalLoss / TRAIN_SIZE
                 trainAccuracy = 100 * correct / TRAIN_SIZE
                 setProgressbarPrefix(progressbar, trainLoss, trainAccuracy, validationLoss, validationAccuracy)
+                # store epoch results
+                arrTrainLoss.append(trainLoss)
+                arrTrainAccuracy.append(trainAccuracy)
+                arrValidationLoss.append(validationLoss)
+                arrValidationAccuracy.append(validationAccuracy)
             # branch if batch size is reached and update information with current values
             elif i % BATCH_SIZE == (BATCH_SIZE - 1):
                 trainLoss = runningLoss / (TRAIN_SIZE / BATCH_SIZE)
                 trainAccuracy = 100 * correct / TRAIN_SIZE
                 setProgressbarPrefix(progressbar, trainLoss, trainAccuracy)
                 runningLoss = 0.
+    # store model results
+    history = {
+        'train_loss': arrTrainLoss,
+        'train_accuracy': arrTrainAccuracy,
+        'validation_loss': arrValidationLoss,
+        'validation_accuracy': arrValidationAccuracy
+    }
+    return history
 
 
 # Validate training with validation dataset. Used after each epoch.
