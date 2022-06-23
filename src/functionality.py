@@ -36,9 +36,10 @@ def setProgressbarPrefix(progressbar: tqdm.tqdm, trainLoss: float = False, train
 
 # Generates progressbar for iterable used in model training.
 def getProgressbar(iter: torch.utils.data.DataLoader, epoch, epochs):
+    width = len(str(epochs))
     progressbar = tqdm.tqdm(
         iterable=iter,
-        desc='Epoch {:>2}/{}'.format(epoch + 1, epochs),
+        desc=f'Epoch {(epoch + 1):>{width}}/{epochs}',
         ascii='░▒',
         unit=' step'
     )
