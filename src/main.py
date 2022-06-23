@@ -11,7 +11,8 @@ from functionality import (
 )
 from model import (
     Model,
-    train
+    train,
+    plotResults
 )
 # external libraries
 import torch
@@ -35,7 +36,8 @@ def main():
     # generate and train model
     model = Model()
     history = train(model, device, device_type, trainLoader, testLoader)
-    print(history['train_accuracy'])
+    # test model
+    plotResults(history)
 
 
 # branch if program is run through 'python main.py'

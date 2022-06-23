@@ -3,3 +3,4 @@ idx2numpy
 numpy
 torch
 tqdm
+matplotlib

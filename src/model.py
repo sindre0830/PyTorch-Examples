@@ -13,6 +13,31 @@ from functionality import (
 # external libraries
 import torch
 import torch.utils.data
+import matplotlib.pyplot as plt
+
+
+# Plot model results stored in history dict.
+def plotResults(history: dict[str, list]):
+    # get values from results
+    epochs = range(1, (len(history['train_loss']) + 1))
+    # plot training and validation loss
+    plt.clf()
+    plt.plot(epochs, history['train_loss'], label='Training loss', c='lightgreen')
+    plt.plot(epochs, history['validation_loss'], label='Validation loss')
+    plt.title('Training and validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.show()
+    # plot validation accuracy
+    plt.clf()
+    plt.plot(epochs, history['validation_accuracy'], label='Validation accuracy', c='red')
+    plt.title('Validation accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.ylim(0, 1)
+    plt.legend()
+    plt.show()
 
 
 # Train model defined in the Model class.
