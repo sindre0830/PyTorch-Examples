@@ -25,7 +25,8 @@ def train(model: torch.nn.Module, device: torch.cuda.device, device_type: str, t
     N = len(trainDatasetLoader.dataset)
     # loop through each epoch
     for epoch in range(EPOCHS):
-        correct = 0
+        correct = 0.
+        running_loss = 0.
         # define the progressbar
         progressbar = tqdm.tqdm(
             iterable=trainDatasetLoader,
@@ -48,13 +49,17 @@ def train(model: torch.nn.Module, device: torch.cuda.device, device_type: str, t
             loss.backward()
             # apply gradients
             optimizer.step()
-            # compute accuracy
+            # calculate running loss
+            running_loss += loss.item()
+            # calculate accuracy
             output = torch.argmax(output, dim=1)
             correct += (output == labels).float().sum()
             accuracy = 100 * correct / N
             # branch if batch size is reached to print more information
             if i % BATCH_SIZE == (BATCH_SIZE - 1):
-                progressbar.set_postfix_str("Loss: {:.4f}, Accuracy: {:.4f}".format(loss.item(), accuracy))
+                loss_value = running_loss / BATCH_SIZE
+                running_loss = 0.
+                progressbar.set_postfix_str("Loss: {:.4f}, Accuracy: {:.4f}".format(loss_value, accuracy))
 
 
 # Defines the machine learning model layout.
