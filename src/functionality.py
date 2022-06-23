@@ -17,12 +17,22 @@ import multiprocessing
 import tqdm
 
 
+# Set prefix in progressbar and update output.
+def setProgressbarPrefix(progressbar: tqdm.tqdm, trainLoss: float = False, trainAccuracy: float = False):
+    trainLossStr = ''
+    trainAccuracyStr = ''
+    if trainLoss:
+        trainLossStr = 'Training Loss: {:.4f}'.format(trainLoss) + (', ' if trainAccuracy else '')
+    if trainAccuracy:
+        trainAccuracyStr = 'Training Accuracy: {:.4f}'.format(trainAccuracy)
+    progressbar.set_postfix_str(trainLossStr + trainAccuracyStr)
+
+
 # Generates progressbar for iterable used in model training.
 def getProgressbar(iter: torch.utils.data.DataLoader, epoch, epochs):
     progressbar = tqdm.tqdm(
         iterable=iter,
         desc='Epoch {:>2}/{}'.format(epoch + 1, epochs),
-        ncols=150,
         ascii='░▒',
         unit=' step'
     )

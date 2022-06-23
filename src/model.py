@@ -7,7 +7,8 @@ from dictionary import (
     GPU_DEVICE
 )
 from functionality import (
-    getProgressbar
+    getProgressbar,
+    setProgressbarPrefix
 )
 # external libraries
 import torch
@@ -55,7 +56,7 @@ def train(model: torch.nn.Module, device: torch.cuda.device, device_type: str, t
             if i % BATCH_SIZE == (BATCH_SIZE - 1):
                 loss_value = running_loss / BATCH_SIZE
                 running_loss = 0.
-                progressbar.set_postfix_str("Loss: {:.4f}, Accuracy: {:.4f}".format(loss_value, accuracy))
+                setProgressbarPrefix(progressbar, loss_value, accuracy)
 
 
 # Defines the machine learning model layout.
