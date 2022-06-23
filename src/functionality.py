@@ -20,9 +20,9 @@ import tqdm
 # Set prefix in progressbar and update output.
 def setProgressbarPrefix(progressbar: tqdm.tqdm, trainLoss: float = 0., trainAccuracy: float = 0., valLoss: float = 0., valAccuracy: float = 0.):
     trainLossStr = f'Train loss: {trainLoss:.4f}, '
-    trainAccuracyStr = f'Train acc: {trainAccuracy:>7.4f}, '
+    trainAccuracyStr = f'Train acc: {trainAccuracy:.4f}, '
     valLossStr = f'Val loss: {valLoss:.4f}, '
-    valAccuracyStr = f'Val acc: {valAccuracy:>7.4f}'
+    valAccuracyStr = f'Val acc: {valAccuracy:.4f}'
     progressbar.set_postfix_str(trainLossStr + trainAccuracyStr + valLossStr + valAccuracyStr)
 
 

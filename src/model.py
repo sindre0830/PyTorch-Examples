@@ -68,7 +68,7 @@ def train(
             if i >= (TRAIN_SIZE / BATCH_SIZE) - 1:
                 validationLoss, validationAccuracy = validateTraining(model, device, criterion, validationLoader)
                 trainLoss = totalLoss / TRAIN_SIZE
-                trainAccuracy = 100 * correct / TRAIN_SIZE
+                trainAccuracy = correct / TRAIN_SIZE
                 setProgressbarPrefix(progressbar, trainLoss, trainAccuracy, validationLoss, validationAccuracy)
                 # store epoch results
                 arrTrainLoss.append(trainLoss)
@@ -78,7 +78,7 @@ def train(
             # branch if batch size is reached and update information with current values
             elif i % BATCH_SIZE == (BATCH_SIZE - 1):
                 trainLoss = runningLoss / (TRAIN_SIZE / BATCH_SIZE)
-                trainAccuracy = 100 * correct / TRAIN_SIZE
+                trainAccuracy = correct / TRAIN_SIZE
                 setProgressbarPrefix(progressbar, trainLoss, trainAccuracy)
                 runningLoss = 0.
     # store model results
@@ -120,7 +120,7 @@ def validateTraining(
     model.train()
     # calculate loss and accruacy
     loss = totalLoss / VALIDATION_SIZE
-    accuracy = 100 * correct / VALIDATION_SIZE
+    accuracy = correct / VALIDATION_SIZE
     return loss, accuracy
 
 
