@@ -20,9 +20,9 @@ import tqdm
 # Set prefix in progressbar and update output.
 def setProgressbarPrefix(progressbar: tqdm.tqdm, trainLoss: float = 0., trainAccuracy: float = 0., valLoss: float = 0., valAccuracy: float = 0.):
     trainLossStr = f'Training Loss: {trainLoss:.4f}, '
-    trainAccuracyStr = f'Training Accuracy: {trainAccuracy:.4f}, '
+    trainAccuracyStr = f'Training Accuracy: {trainAccuracy:>7.4f}, '
     valLossStr = f'Validation Loss: {valLoss:.4f}, '
-    valAccuracyStr = f'Validation Accuracy: {valAccuracy:.4f}'
+    valAccuracyStr = f'Validation Accuracy: {valAccuracy:>7.4f}'
     progressbar.set_postfix_str(trainLossStr + trainAccuracyStr + valLossStr + valAccuracyStr)
 
 
@@ -35,6 +35,7 @@ def getProgressbar(iter: torch.utils.data.DataLoader, epoch, epochs):
         ascii='░▒',
         unit=' step'
     )
+    setProgressbarPrefix(progressbar)
     return progressbar
 
 
