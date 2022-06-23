@@ -23,66 +23,76 @@ def train(model: torch.nn.Module, device: torch.cuda.device, device_type: str, t
     # set optimizer and criterion
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0005)
-    TRAIN_N = len(trainLoader.dataset)
-    VALIDATION_N = len(validationLoader.dataset)
+    TRAIN_SIZE = len(trainLoader.dataset)
     # loop through each epoch
     for epoch in range(EPOCHS):
-        train_correct = 0.
-        train_loss_epoch = 0.
-        train_running_loss = 0.
+        correct = 0.
+        totalLoss = 0.
+        runningLoss = 0.
         # define the progressbar
         progressbar = getProgressbar(trainLoader, epoch, EPOCHS)
         # set model to training mode
         model.train()
-        # loop through the training dataset
+        # loop through the dataset
         for i, (data, labels) in enumerate(progressbar):
-            # send training data to device
+            # send dataset to device
             data = data.to(device, non_blocking=True)
             labels = labels.to(device, non_blocking=True)
             # clear gradients
             optimizer.zero_grad()
-            # get training results
+            # get results
             output = model(data)
             # compute gradients through backpropagation
-            train_loss = criterion(output, labels)
-            train_loss.backward()
+            loss = criterion(output, labels)
+            loss.backward()
             # apply gradients
             optimizer.step()
-            # calculate running training loss
-            train_running_loss += train_loss.item()
-            train_loss_epoch += train_loss.item()
-            # calculate training accuracy
+            # calculate running loss
+            runningLoss += loss.item()
+            totalLoss += loss.item()
+            # calculate accuracy
             output = torch.argmax(output, dim=1)
-            train_correct += (output == labels).float().sum()
-            train_accuracy = 100 * train_correct / TRAIN_N
-            # branch if batch size is reached to print more information
-            if i >= (TRAIN_N / BATCH_SIZE) - 1:
-                validation_correct = 0.
-                validation_loss_epoch = 0.
-                # set model to evaluation mode
-                model.eval()
-                # loop through the validation dataset
-                for i, (data, labels) in enumerate(validationLoader):
-                    # send validation data to device
-                    data = data.to(device, non_blocking=True)
-                    labels = labels.to(device, non_blocking=True)
-                    # get validation results
-                    output = model(data)
-                    # calculate training loss
-                    validation_loss = criterion(output, labels)
-                    validation_loss_epoch += validation_loss.item()
-                    # calculate validation accuracy
-                    output = torch.argmax(output, dim=1)
-                    validation_correct += (output == labels).float().sum()
-                # get parameters and set results in progressbar
-                validation_accuracy = 100 * validation_correct / VALIDATION_N
-                validation_loss_value = validation_loss_epoch / VALIDATION_N
-                train_loss_value = train_loss_epoch / TRAIN_N
-                setProgressbarPrefix(progressbar, train_loss_value, train_accuracy, validation_loss_value, validation_accuracy)
+            correct += (output == labels).float().sum()
+            # branch if iteration is on the last step and validate model then update the information with the final values
+            if i >= (TRAIN_SIZE / BATCH_SIZE) - 1:
+                validationLoss, validationAccuracy = validateTraining(model, device, criterion, validationLoader)
+                trainLoss = totalLoss / TRAIN_SIZE
+                trainAccuracy = 100 * correct / TRAIN_SIZE
+                setProgressbarPrefix(progressbar, trainLoss, trainAccuracy, validationLoss, validationAccuracy)
+            # branch if batch size is reached and update information with current values
             elif i % BATCH_SIZE == (BATCH_SIZE - 1):
-                train_loss_value = train_running_loss / (TRAIN_N / BATCH_SIZE)
-                train_running_loss = 0.
-                setProgressbarPrefix(progressbar, train_loss_value, train_accuracy)
+                trainLoss = runningLoss / (TRAIN_SIZE / BATCH_SIZE)
+                trainAccuracy = 100 * correct / TRAIN_SIZE
+                setProgressbarPrefix(progressbar, trainLoss, trainAccuracy)
+                runningLoss = 0.
+
+
+# Validate training with validation dataset. Used after each epoch.
+def validateTraining(model: torch.nn.Module, device: torch.cuda.device, criterion: torch.nn.CrossEntropyLoss, validationLoader: torch.utils.data.DataLoader):
+    totalLoss = 0.
+    correct = 0.
+    VALIDATION_SIZE = len(validationLoader.dataset)
+    # set model to evaluation mode
+    model.eval()
+    # loop through the validation dataset
+    for _, (data, labels) in enumerate(validationLoader):
+        # send validation data to device
+        data = data.to(device, non_blocking=True)
+        labels = labels.to(device, non_blocking=True)
+        # get validation results
+        output = model(data)
+        # calculate training loss for this batch
+        loss = criterion(output, labels)
+        totalLoss += loss.item()
+        # calculate validation accuracy
+        output = torch.argmax(output, dim=1)
+        correct += (output == labels).float().sum()
+    # set model to train mode
+    model.train()
+    # calculate loss and accruacy
+    loss = totalLoss / VALIDATION_SIZE
+    accuracy = 100 * correct / VALIDATION_SIZE
+    return loss, accuracy
 
 
 # Defines the machine learning model layout.
