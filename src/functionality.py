@@ -18,14 +18,20 @@ import tqdm
 
 
 # Set prefix in progressbar and update output.
-def setProgressbarPrefix(progressbar: tqdm.tqdm, trainLoss: float = False, trainAccuracy: float = False):
+def setProgressbarPrefix(progressbar: tqdm.tqdm, trainLoss: float = False, trainAccuracy: float = False, valLoss: float = False, valAccuracy: float = False):
     trainLossStr = ''
     trainAccuracyStr = ''
+    valLossStr = ''
+    valAccuracyStr = ''
     if trainLoss:
-        trainLossStr = 'Training Loss: {:.4f}'.format(trainLoss) + (', ' if trainAccuracy else '')
+        trainLossStr = 'Training Loss: {:.4f}'.format(trainLoss) + (', ' if trainAccuracy or valLoss or valAccuracy else '')
     if trainAccuracy:
-        trainAccuracyStr = 'Training Accuracy: {:.4f}'.format(trainAccuracy)
-    progressbar.set_postfix_str(trainLossStr + trainAccuracyStr)
+        trainAccuracyStr = 'Training Accuracy: {:.4f}'.format(trainAccuracy) + (', ' if valLoss or valAccuracy else '')
+    if valLoss:
+        valLossStr = 'Validation Loss: {:.4f}'.format(valLoss) + (', ' if valAccuracy else '')
+    if valAccuracy:
+        valAccuracyStr = 'Validation Accuracy: {:.4f}'.format(valAccuracy)
+    progressbar.set_postfix_str(trainLossStr + trainAccuracyStr + valLossStr + valAccuracyStr)
 
 
 # Generates progressbar for iterable used in model training.

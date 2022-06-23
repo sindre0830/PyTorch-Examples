@@ -30,10 +30,11 @@ def main():
     getDataset()
     trainData, trainLabels, testData, testLabels = loadDataset()
     trainData, testData = normalizeData(trainData, testData)
-    trainDatasetLoader = convertDatasetToTensors(device_type, trainData, trainLabels)
+    trainLoader = convertDatasetToTensors(device_type, trainData, trainLabels)
+    testLoader = convertDatasetToTensors(device_type, testData, testLabels)
     # create model
     model = Model()
-    train(model, device, device_type, trainDatasetLoader)
+    train(model, device, device_type, trainLoader, testLoader)
 
 
 # branch if program is run through 'python main.py'
