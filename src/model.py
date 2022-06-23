@@ -16,7 +16,13 @@ import torch.utils.data
 
 
 # Train model defined in the Model class.
-def train(model: torch.nn.Module, device: torch.cuda.device, device_type: str, trainLoader: torch.utils.data.DataLoader, validationLoader: torch.utils.data.DataLoader):
+def train(
+    model: torch.nn.Module,
+    device: torch.cuda.device,
+    device_type: str,
+    trainLoader: torch.utils.data.DataLoader,
+    validationLoader: torch.utils.data.DataLoader
+):
     # branch if the device is set to GPU and send the model to the device
     if device_type is GPU_DEVICE:
         model.cuda(device)
@@ -86,7 +92,12 @@ def train(model: torch.nn.Module, device: torch.cuda.device, device_type: str, t
 
 
 # Validate training with validation dataset. Used after each epoch.
-def validateTraining(model: torch.nn.Module, device: torch.cuda.device, criterion: torch.nn.CrossEntropyLoss, validationLoader: torch.utils.data.DataLoader):
+def validateTraining(
+    model: torch.nn.Module,
+    device: torch.cuda.device,
+    criterion: torch.nn.CrossEntropyLoss,
+    validationLoader: torch.utils.data.DataLoader
+):
     totalLoss = 0.
     correct = 0.
     VALIDATION_SIZE = len(validationLoader.dataset)
