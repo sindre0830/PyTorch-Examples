@@ -1,5 +1,6 @@
 # paths
 DATASET_PATH = 'data/dataset/'
+PLOT_PATH = 'data/plots/'
 # parameters
 EPOCHS = 2
 BATCH_SIZE = 32

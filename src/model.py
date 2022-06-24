@@ -1,5 +1,6 @@
 # internal libraries
 from dictionary import (
+    PLOT_PATH,
     EPOCHS,
     BATCH_SIZE,
     CHANNELS,
@@ -11,6 +12,7 @@ from functionality import (
     setProgressbarPrefix
 )
 # external libraries
+import os
 import torch
 import torch.utils.data
 import matplotlib.pyplot as plt
@@ -18,6 +20,8 @@ import matplotlib.pyplot as plt
 
 # Plot model results stored in history dict.
 def plotResults(history: dict[str, list]):
+    # create direcotries if they don't exists
+    os.makedirs(PLOT_PATH, exist_ok=True)
     # get values from results
     epochs = range(1, (len(history['train_loss']) + 1))
     # plot training and validation loss
@@ -28,6 +32,7 @@ def plotResults(history: dict[str, list]):
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.legend()
+    plt.savefig(PLOT_PATH + 'loss.png')
     plt.show()
     # plot validation accuracy
     plt.clf()
@@ -37,6 +42,7 @@ def plotResults(history: dict[str, list]):
     plt.ylabel('Accuracy')
     plt.ylim(0, 1)
     plt.legend()
+    plt.savefig(PLOT_PATH + 'accuracy.png')
     plt.show()
 
 
