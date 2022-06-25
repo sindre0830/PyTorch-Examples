@@ -13,7 +13,8 @@ from model import (
     Model,
     train,
     plotResults,
-    batchPrediction
+    batchPrediction,
+    getClassificationReport
 )
 # external libraries
 import torch
@@ -40,6 +41,7 @@ def main():
     # test model
     plotResults(history)
     yPred, yTrue = batchPrediction(model, testLoader)
+    print(getClassificationReport(yPred, yTrue))
 
 
 # branch if program is run through 'python main.py'

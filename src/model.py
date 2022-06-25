@@ -5,7 +5,8 @@ from dictionary import (
     BATCH_SIZE,
     CHANNELS,
     LABELS_TOTAL,
-    GPU_DEVICE
+    GPU_DEVICE,
+    LABELS_NAME
 )
 from functionality import (
     getProgressbar,
@@ -17,6 +18,13 @@ import torch
 import torch.utils.data
 import matplotlib.pyplot as plt
 import numpy as np
+import sklearn.metrics
+
+
+# Generate classification report.
+def getClassificationReport(yPred: np.ndarray, yTrue: np.ndarray):
+    yTrue = np.eye(LABELS_TOTAL)[yTrue]
+    return sklearn.metrics.classification_report(yTrue, yPred, target_names=LABELS_NAME)
 
 
 # Prediction on dataset.
@@ -29,6 +37,8 @@ def batchPrediction(model: torch.nn.Module, dataset: torch.utils.data.DataLoader
         output = model(data)
         yPred = np.append(yPred, output.detach().numpy(), axis=0)
         yTrue = np.append(yTrue, labels.detach().numpy(), axis=0)
+    yPred = yPred.astype(np.uint)
+    yTrue = yTrue.astype(np.uint)
     return yPred, yTrue
 
 
