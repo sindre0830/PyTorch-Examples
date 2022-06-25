@@ -16,6 +16,20 @@ import os
 import torch
 import torch.utils.data
 import matplotlib.pyplot as plt
+import numpy as np
+
+
+# Prediction on dataset.
+# Used for classification report and confusion matrix.
+def batchPrediction(model: torch.nn.Module, dataset: torch.utils.data.DataLoader):
+    yPred = np.empty(shape=(0, LABELS_TOTAL))
+    yTrue = np.empty(shape=0)
+    model.eval()
+    for (data, labels) in dataset:
+        output = model(data)
+        yPred = np.append(yPred, output.detach().numpy(), axis=0)
+        yTrue = np.append(yTrue, labels.detach().numpy(), axis=0)
+    return yPred, yTrue
 
 
 # Plot model results stored in history dict.

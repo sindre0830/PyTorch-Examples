@@ -12,7 +12,8 @@ from functionality import (
 from model import (
     Model,
     train,
-    plotResults
+    plotResults,
+    batchPrediction
 )
 # external libraries
 import torch
@@ -38,6 +39,7 @@ def main():
     history = train(model, device, device_type, trainLoader, testLoader)
     # test model
     plotResults(history)
+    yPred, yTrue = batchPrediction(model, testLoader)
 
 
 # branch if program is run through 'python main.py'
