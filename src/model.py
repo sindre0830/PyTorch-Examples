@@ -19,11 +19,22 @@ import torch.utils.data
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.metrics
+import pandas as pd
+
+
+# Generate confusion matrix.
+def getConfusionMatrix(yPred: np.ndarray, yTrue: np.ndarray):
+    # flatten array to get index of highest value
+    yPred = np.argmax(yPred, axis=1)
+    # calculate and return confusion matrix
+    return pd.DataFrame(sklearn.metrics.confusion_matrix(yTrue, yPred), index=LABELS_NAME, columns=LABELS_NAME)
 
 
 # Generate classification report.
 def getClassificationReport(yPred: np.ndarray, yTrue: np.ndarray):
-    yTrue = np.eye(LABELS_TOTAL)[yTrue]
+    # flatten array to get index of highest value
+    yPred = np.argmax(yPred, axis=1)
+    # calculate and return classification report
     return sklearn.metrics.classification_report(yTrue, yPred, target_names=LABELS_NAME)
 
 

@@ -14,7 +14,8 @@ from model import (
     train,
     plotResults,
     batchPrediction,
-    getClassificationReport
+    getClassificationReport,
+    getConfusionMatrix
 )
 # external libraries
 import torch
@@ -42,6 +43,7 @@ def main():
     plotResults(history)
     yPred, yTrue = batchPrediction(model, testLoader)
     print(getClassificationReport(yPred, yTrue))
+    print(getConfusionMatrix(yPred, yTrue))
 
 
 # branch if program is run through 'python main.py'

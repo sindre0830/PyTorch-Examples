@@ -5,3 +5,4 @@ torch
 tqdm
 matplotlib
 scikit-learn
+pandas
