@@ -3,3 +3,6 @@ idx2numpy
 numpy
 torch
 tqdm
+matplotlib
+scikit-learn
+pandas

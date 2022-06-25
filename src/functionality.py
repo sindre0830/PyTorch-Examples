@@ -1,5 +1,6 @@
 # internal libraries
 from dictionary import (
+    CPU_DEVICE,
     DATASET_PATH,
     BATCH_SIZE
 )
@@ -12,10 +13,35 @@ import idx2numpy
 import numpy as np
 import torch
 import torch.utils.data
+import multiprocessing
+import tqdm
+
+
+# Set prefix in progressbar and update output.
+def setProgressbarPrefix(progressbar: tqdm.tqdm, trainLoss: float = 0., trainAccuracy: float = 0., valLoss: float = 0., valAccuracy: float = 0.):
+    trainLossStr = f'Train loss: {trainLoss:.4f}, '
+    trainAccuracyStr = f'Train acc: {trainAccuracy:.4f}, '
+    valLossStr = f'Val loss: {valLoss:.4f}, '
+    valAccuracyStr = f'Val acc: {valAccuracy:.4f}'
+    progressbar.set_postfix_str(trainLossStr + trainAccuracyStr + valLossStr + valAccuracyStr)
+
+
+# Generates progressbar for iterable used in model training.
+def getProgressbar(iter: torch.utils.data.DataLoader, epoch, epochs):
+    width = len(str(epochs))
+    progressbar = tqdm.tqdm(
+        iterable=iter,
+        desc=f'Epoch {(epoch + 1):>{width}}/{epochs}',
+        ascii='░▒',
+        unit=' steps',
+        colour='blue'
+    )
+    setProgressbarPrefix(progressbar)
+    return progressbar
 
 
 # Converts dataset to a PyTorch tensor dataset.
-def convertDatasetToTensors(data: np.ndarray, labels: np.ndarray):
+def convertDatasetToTensors(device_type: str, data: np.ndarray, labels: np.ndarray):
     # reshape data by adding channels
     data = np.expand_dims(data, axis=1).astype('float32')
     # convert to tensors
@@ -24,7 +50,13 @@ def convertDatasetToTensors(data: np.ndarray, labels: np.ndarray):
     # convert to dataset
     dataset = torch.utils.data.TensorDataset(data, labels)
     # convert to data loader
-    datasetLoader = torch.utils.data.DataLoader(dataset, batch_size=BATCH_SIZE)
+    pin_memory = False
+    workers = 0
+    # branch if device is set to CPU and set parameters accordingly
+    if device_type is CPU_DEVICE:
+        pin_memory = True
+        workers = multiprocessing.cpu_count()
+    datasetLoader = torch.utils.data.DataLoader(dataset, batch_size=BATCH_SIZE, pin_memory=pin_memory, num_workers=workers)
     return datasetLoader
 
 

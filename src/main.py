@@ -1,4 +1,8 @@
 # internal libraries
+from dictionary import (
+    GPU_DEVICE,
+    CPU_DEVICE
+)
 from functionality import (
     getDataset,
     loadDataset,
@@ -7,7 +11,11 @@ from functionality import (
 )
 from model import (
     Model,
-    train
+    train,
+    plotResults,
+    batchPrediction,
+    getClassificationReport,
+    getConfusionMatrix
 )
 # external libraries
 import torch
@@ -16,7 +24,8 @@ import warnings
 # ignore warnings, this was added due to PyTorch LazyLayers causing warning
 warnings.filterwarnings('ignore')
 # get a device to run on
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device_type = GPU_DEVICE if torch.cuda.is_available() else CPU_DEVICE
+device = torch.device(device_type)
 
 
 # Main program.
@@ -25,10 +34,16 @@ def main():
     getDataset()
     trainData, trainLabels, testData, testLabels = loadDataset()
     trainData, testData = normalizeData(trainData, testData)
-    trainDatasetLoader = convertDatasetToTensors(trainData, trainLabels)
-    # create model
+    trainLoader = convertDatasetToTensors(device_type, trainData, trainLabels)
+    testLoader = convertDatasetToTensors(device_type, testData, testLabels)
+    # generate and train model
     model = Model()
-    train(model, device, trainDatasetLoader)
+    history = train(model, device, device_type, trainLoader, testLoader)
+    # test model
+    plotResults(history)
+    yPred, yTrue = batchPrediction(model, testLoader)
+    print(getClassificationReport(yPred, yTrue))
+    print(getConfusionMatrix(yPred, yTrue))
 
 
 # branch if program is run through 'python main.py'
