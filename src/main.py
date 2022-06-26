@@ -11,6 +11,7 @@ from functionality import (
 )
 from model import (
     Model,
+    save,
     train,
     plotResults,
     batchPrediction,
@@ -44,6 +45,8 @@ def main():
     yPred, yTrue = batchPrediction(model, testLoader)
     print(getClassificationReport(yPred, yTrue))
     print(getConfusionMatrix(yPred, yTrue))
+    # save model
+    save(model)
 
 
 # branch if program is run through 'python main.py'

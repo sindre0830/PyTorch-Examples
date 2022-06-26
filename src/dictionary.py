@@ -1,6 +1,7 @@
 # paths
 DATASET_PATH = 'data/dataset/'
 PLOT_PATH = 'data/plots/'
+MODEL_PATH = 'data/model.pt'
 # parameters
 EPOCHS = 30
 BATCH_SIZE = 32

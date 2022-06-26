@@ -1,6 +1,7 @@
 # internal libraries
 from dictionary import (
     CPU_DEVICE,
+    MODEL_PATH,
     PLOT_PATH,
     EPOCHS,
     BATCH_SIZE,
@@ -21,6 +22,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.metrics
 import pandas as pd
+
+
+# Save model.
+def save(model: torch.nn.Module):
+    torch.save(model.state_dict(), MODEL_PATH)
 
 
 # Generate confusion matrix.
