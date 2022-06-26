@@ -4,6 +4,8 @@ on:
   push:
     paths:
     - '.github/workflows/spellcheck.yml'
+    - '.config/.pyspelling.yml'
+    - '.config/wordlist.txt'
     - 'README.md'
   pull_request:
   workflow_dispatch:
