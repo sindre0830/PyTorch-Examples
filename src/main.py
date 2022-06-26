@@ -46,7 +46,7 @@ def main():
     print(getClassificationReport(yPred, yTrue))
     print(getConfusionMatrix(yPred, yTrue))
     # save model
-    save(model)
+    save(model, history['validation_loss'][-1], history['validation_accuracy'][-1])
 
 
 # branch if program is run through 'python main.py'

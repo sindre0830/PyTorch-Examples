@@ -8,7 +8,8 @@ from dictionary import (
     CHANNELS,
     LABELS_TOTAL,
     GPU_DEVICE,
-    LABELS_NAME
+    LABELS_NAME,
+    RESULTS_PATH
 )
 from functionality import (
     getProgressbar,
@@ -24,6 +25,12 @@ import sklearn.metrics
 import pandas as pd
 
 
+# Save results from model training.
+def saveResults(loss, accuracy):
+    results = np.array((loss, accuracy))
+    np.save(RESULTS_PATH, results)
+
+
 # Load model.
 def load():
     model = Model()
@@ -32,7 +39,8 @@ def load():
 
 
 # Save model.
-def save(model: torch.nn.Module):
+def save(model: torch.nn.Module, loss, accuracy):
+    saveResults(loss, accuracy)
     torch.save(model.state_dict(), MODEL_PATH)
 
 
