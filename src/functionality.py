@@ -24,7 +24,7 @@ def setProgressbarPrefix(
     trainAccuracy: float = 0.,
     valLoss: float = 0.,
     valAccuracy: float = 0.,
-    modelSaved: bool = False
+    modelSaved: bool = ''
 ):
     trainLossStr = f'Train loss: {trainLoss:.4f}, '
     trainAccuracyStr = f'Train acc: {trainAccuracy:.4f}, '
