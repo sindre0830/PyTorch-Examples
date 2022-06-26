@@ -11,6 +11,7 @@ from functionality import (
 )
 from model import (
     Model,
+    loadResults,
     save,
     train,
     plotResults,
@@ -38,6 +39,7 @@ def main():
     trainLoader = convertDatasetToTensors(device_type, trainData, trainLabels)
     testLoader = convertDatasetToTensors(device_type, testData, testLabels)
     # generate and train model
+    loss, accuracy = loadResults()
     model = Model()
     history = train(model, device, device_type, trainLoader, testLoader)
     # test model

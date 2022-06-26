@@ -25,6 +25,12 @@ import sklearn.metrics
 import pandas as pd
 
 
+# Load results from current model.
+def loadResults():
+    (loss, accuracy) = np.load(RESULTS_PATH)
+    return loss, accuracy
+
+
 # Save results from model training.
 def saveResults(loss, accuracy):
     results = np.array((loss, accuracy))
