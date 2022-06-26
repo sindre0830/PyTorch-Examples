@@ -27,6 +27,8 @@ import pandas as pd
 
 # Load results from current model.
 def loadResults():
+    if not os.path.exists(RESULTS_PATH):
+        return None, None
     (loss, accuracy) = np.load(RESULTS_PATH)
     return loss, accuracy
 
@@ -115,7 +117,9 @@ def train(
     device: torch.cuda.device,
     device_type: str,
     trainLoader: torch.utils.data.DataLoader,
-    validationLoader: torch.utils.data.DataLoader
+    validationLoader: torch.utils.data.DataLoader,
+    currentLoss: float = None,
+    currentAccuracy: float = None
 ):
     # branch if the device is set to GPU and send the model to the device
     if device_type is GPU_DEVICE:
@@ -163,12 +167,20 @@ def train(
                 validationLoss, validationAccuracy = validateTraining(model, device, criterion, validationLoader)
                 trainLoss = totalLoss / TRAIN_SIZE
                 trainAccuracy = correct / TRAIN_SIZE
-                setProgressbarPrefix(progressbar, trainLoss, trainAccuracy, validationLoss, validationAccuracy)
                 # store epoch results
                 arrTrainLoss.append(trainLoss)
                 arrTrainAccuracy.append(trainAccuracy)
                 arrValidationLoss.append(validationLoss)
                 arrValidationAccuracy.append(validationAccuracy)
+                # check if results are better than previous results
+                currentResultIsNone = currentLoss is None or currentAccuracy is None
+                modelSaved = False
+                if currentResultIsNone or (validationLoss < currentLoss and validationAccuracy > currentAccuracy):
+                    save(model, validationLoss, validationAccuracy)
+                    currentLoss = validationLoss
+                    currentAccuracy = validationAccuracy
+                    modelSaved = True
+                setProgressbarPrefix(progressbar, trainLoss, trainAccuracy, validationLoss, validationAccuracy, modelSaved)
             # branch if batch size is reached and update information with current values
             elif i % BATCH_SIZE == (BATCH_SIZE - 1):
                 trainLoss = runningLoss / (TRAIN_SIZE / BATCH_SIZE)

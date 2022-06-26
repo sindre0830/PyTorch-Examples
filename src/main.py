@@ -12,6 +12,7 @@ from functionality import (
 from model import (
     Model,
     loadResults,
+    load,
     save,
     train,
     plotResults,
@@ -41,7 +42,8 @@ def main():
     # generate and train model
     loss, accuracy = loadResults()
     model = Model()
-    history = train(model, device, device_type, trainLoader, testLoader)
+    history = train(model, device, device_type, trainLoader, testLoader, loss, accuracy)
+    model = load()
     # test model
     plotResults(history)
     yPred, yTrue = batchPrediction(model, testLoader)
