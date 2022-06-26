@@ -1,5 +1,6 @@
 # internal libraries
 from dictionary import (
+    CPU_DEVICE,
     PLOT_PATH,
     EPOCHS,
     BATCH_SIZE,
@@ -46,8 +47,8 @@ def batchPrediction(model: torch.nn.Module, dataset: torch.utils.data.DataLoader
     model.eval()
     for (data, labels) in dataset:
         output = model(data)
-        yPred = np.append(yPred, output.detach().numpy(), axis=0)
-        yTrue = np.append(yTrue, labels.detach().numpy(), axis=0)
+        yPred = np.append(yPred, output.detach().to(CPU_DEVICE).numpy(), axis=0)
+        yTrue = np.append(yTrue, labels.detach().to(CPU_DEVICE).numpy(), axis=0)
     yPred = yPred.astype(np.uint)
     yTrue = yTrue.astype(np.uint)
     return yPred, yTrue
