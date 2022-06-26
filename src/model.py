@@ -24,6 +24,13 @@ import sklearn.metrics
 import pandas as pd
 
 
+# Load model.
+def load():
+    model = Model()
+    model.load_state_dict(torch.load(MODEL_PATH))
+    return model
+
+
 # Save model.
 def save(model: torch.nn.Module):
     torch.save(model.state_dict(), MODEL_PATH)
