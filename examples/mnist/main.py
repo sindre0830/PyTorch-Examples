@@ -13,7 +13,6 @@ from model import (
     Model,
     loadResults,
     load,
-    save,
     train,
     plotResults,
     batchPrediction,
@@ -24,7 +23,7 @@ from model import (
 import torch
 import warnings
 
-# ignore warnings, this was added due to PyTorch LazyLayers causing warning
+# ignore warnings, this was added due to PyTorch LazyLayers spamming warnings
 warnings.filterwarnings('ignore')
 # get a device to run on
 device_type = GPU_DEVICE if torch.cuda.is_available() else CPU_DEVICE
@@ -49,8 +48,6 @@ def main():
     yPred, yTrue = batchPrediction(model, testLoader)
     print(getClassificationReport(yPred, yTrue))
     print(getConfusionMatrix(yPred, yTrue))
-    # save model
-    save(model, history['validation_loss'][-1], history['validation_accuracy'][-1])
 
 
 # branch if program is run through 'python main.py'
