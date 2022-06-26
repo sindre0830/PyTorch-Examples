@@ -21,12 +21,25 @@ class Dataset():
         'testData': 'http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz',
         'testLabels': 'http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz'
     }
+    trainDataset = None
+    testDataset = None
+    valDataset = None
 
     def __init__(self):
         """
         Initializes dataset class.
         """
         pass
+
+    def load(self):
+        # load numpy data from file
+        trainData = np.load(DATASET_PATH + 'trainData.npy')
+        trainLabels = np.load(DATASET_PATH + 'trainLabels.npy')
+        testData = np.load(DATASET_PATH + 'testData.npy')
+        testLabels = np.load(DATASET_PATH + 'testLabels.npy')
+        # store as datasets
+        self.trainDataset = (trainData, trainLabels)
+        self.testDataset = (testData, testLabels)
 
     def get(self):
         # create path if it doesn't exist
