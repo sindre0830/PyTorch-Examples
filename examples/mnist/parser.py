@@ -1,7 +1,8 @@
 # internal libraries
 from dictionary import (
     DATASET_PATH,
-    TEST_SIZE
+    CPU_DEVICE,
+    BATCH_SIZE
 )
 # external libraries
 import os
@@ -10,6 +11,9 @@ import gzip
 import shutil
 import idx2numpy
 import numpy as np
+import torch
+import torch.utils.data
+import multiprocessing
 
 
 class Dataset():
@@ -22,19 +26,24 @@ class Dataset():
         'testData': 'http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz',
         'testLabels': 'http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz'
     }
+    device_type: str = None
     xTrain = None
     yTrain = None
     xTest = None
     yTest = None
-    trainDataset = None
-    testDataset = None
-    valDataset = None
+    train = None
+    test = None
+    val = None
 
-    def __init__(self):
+    def __init__(self, device_type: str = CPU_DEVICE):
         """
         Initializes dataset class.
         """
-        pass
+        self.device_type = device_type
+
+    def toTensor(self):
+        self.train = convertDatasetToTensors(self.device_type, self.xTrain, self.yTrain)
+        self.test = convertDatasetToTensors(self.device_type, self.xTest, self.yTest)
 
     def normalize(self):
         self.xTrain = self.xTrain / 255.
@@ -43,10 +52,10 @@ class Dataset():
 
     def load(self):
         # load numpy data from file
-        self.xTrain = np.load(DATASET_PATH + 'trainData.npy')
-        self.yTrain = np.load(DATASET_PATH + 'trainLabels.npy')
-        self.xTest = np.load(DATASET_PATH + 'testData.npy')
-        self.yTest = np.load(DATASET_PATH + 'testLabels.npy')
+        self.xTrain: np.ndarray = np.load(DATASET_PATH + 'trainData.npy')
+        self.yTrain: np.ndarray = np.load(DATASET_PATH + 'trainLabels.npy')
+        self.xTest: np.ndarray = np.load(DATASET_PATH + 'testData.npy')
+        self.yTest: np.ndarray = np.load(DATASET_PATH + 'testLabels.npy')
 
     def get(self):
         # create path if it doesn't exist
@@ -65,3 +74,22 @@ class Dataset():
                 arr: np.ndarray = idx2numpy.convert_from_file(DATASET_PATH + filename)
                 np.save(DATASET_PATH + filename + '.npy', arr)
                 os.remove(DATASET_PATH + filename)
+    
+# Converts dataset to a PyTorch tensor dataset.
+def convertDatasetToTensors(device_type: str, data: np.ndarray, labels: np.ndarray):
+    # reshape data by adding channels
+    data = np.expand_dims(data, axis=1).astype('float32')
+    # convert to tensors
+    data = torch.tensor(data)
+    labels = torch.tensor(labels)
+    # convert to dataset
+    dataset = torch.utils.data.TensorDataset(data, labels)
+    # convert to data loader
+    pin_memory = False
+    workers = 0
+    # branch if device is set to CPU and set parameters accordingly
+    if device_type is CPU_DEVICE:
+        pin_memory = True
+        workers = multiprocessing.cpu_count()
+    datasetLoader = torch.utils.data.DataLoader(dataset, batch_size=BATCH_SIZE, pin_memory=pin_memory, num_workers=workers)
+    return datasetLoader

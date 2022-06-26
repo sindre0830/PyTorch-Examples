@@ -19,6 +19,9 @@ from model import (
     getClassificationReport,
     getConfusionMatrix
 )
+from parser import (
+    Dataset
+)
 # external libraries
 import torch
 import warnings
@@ -33,6 +36,13 @@ device = torch.device(device_type)
 # Main program.
 def main():
     # preprocess
+    dataset = Dataset()
+    dataset.get()
+    dataset.load()
+    dataset.normalize()
+    dataset.toTensor()
+    return
+
     getDataset()
     trainData, trainLabels, testData, testLabels = loadDataset()
     trainData, testData = normalizeData(trainData, testData)
